@@ -27,6 +27,40 @@ document.addEventListener("DOMContentLoaded", () => {
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
         `;
 
+        // Add a participants section (build DOM nodes to avoid HTML injection)
+        const participantsContainer = document.createElement("div");
+        participantsContainer.className = "participants-section";
+
+        const participantsTitle = document.createElement("p");
+        participantsTitle.className = "participants-title";
+        participantsTitle.innerHTML = `<strong>Participants (${details.participants.length}/${details.max_participants}):</strong>`;
+        participantsContainer.appendChild(participantsTitle);
+
+        const participantsList = document.createElement("ul");
+        participantsList.className = "participants-list";
+
+        if (details.participants.length === 0) {
+          const li = document.createElement("li");
+          li.className = "participant-item empty";
+          li.textContent = "No participants yet";
+          participantsList.appendChild(li);
+        } else {
+          details.participants.forEach((email) => {
+            const li = document.createElement("li");
+            li.className = "participant-item";
+
+            const chip = document.createElement("span");
+            chip.className = "participant-chip";
+            chip.textContent = email; // use textContent to avoid injection
+            li.appendChild(chip);
+
+            participantsList.appendChild(li);
+          });
+        }
+
+        participantsContainer.appendChild(participantsList);
+        activityCard.appendChild(participantsContainer);
+
         activitiesList.appendChild(activityCard);
 
         // Add option to select dropdown
